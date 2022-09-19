@@ -182,11 +182,13 @@ class DatabaseWrapper(BaseDatabaseWrapper):
         return self.client_connection[name]
 
     def connect(self):
+        logger.debug(f"CONN_MAX_AGE: {self.settings_dict['CONN_MAX_AGE']}")
         if self.client_connection:
             logger.debug("not creating a new connection because it already exists")
         else:
             logger.debug("creating a new connection")
             super().connect()
+        logger.debug(f"after connect: close at {self.close_at}")
 
     def _set_autocommit(self, autocommit):
         """

@@ -14,6 +14,7 @@ from .features import DatabaseFeatures
 from .introspection import DatabaseIntrospection
 from .operations import DatabaseOperations
 from .schema import DatabaseSchemaEditor
+from contextlib import contextmanager
 
 logger = getLogger(__name__)
 
@@ -179,6 +180,13 @@ class DatabaseWrapper(BaseDatabaseWrapper):
         self.djongo_connection = DjongoClient(database, es)
         return self.client_connection[name]
 
+    def connect(self):
+        if self.client_connection:
+            logger.debug("not creating a new connection because it already exists")
+        else:
+            logger.debug("creating a new connection")
+            super().connect()
+
     def _set_autocommit(self, autocommit):
         """
         Default method must be overridden, eventhough not used.
@@ -199,6 +207,23 @@ class DatabaseWrapper(BaseDatabaseWrapper):
         Returns an active connection cursor to the database.
         """
         return Cursor(self.client_connection, self.connection, self.djongo_connection)
+
+    def close_if_health_check_failed(self):
+        logger.debug("close_if_health_check_failed method")
+        super().close_if_health_check_failed()
+
+    def close_if_unusable_or_obsolete(self):
+        logger.debug("close_if_unusable_or_obsolete method")
+        super().close_if_unusable_or_obsolete()
+
+    @contextmanager
+    def temporary_connection(self):
+        logger.debug("temporary_connection method")
+        super().temporary_connection()
+
+    def _nodb_cursor(self):
+        logger.debug("_nodb_cursor method")
+        super()._nodb_cursor()
 
     def _close(self):
         """

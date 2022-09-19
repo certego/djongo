@@ -114,6 +114,7 @@ class DatabaseWrapper(BaseDatabaseWrapper):
     ops_class = DatabaseOperations
 
     def __init__(self, *args, **kwargs):
+        logger.debug("init DatabaseWrapper")
         self.client_connection = None
         self.djongo_connection = None
         super().__init__(*args, **kwargs)
@@ -208,10 +209,6 @@ class DatabaseWrapper(BaseDatabaseWrapper):
         """
         return Cursor(self.client_connection, self.connection, self.djongo_connection)
 
-    def close_if_health_check_failed(self):
-        logger.debug("close_if_health_check_failed method")
-        super().close_if_health_check_failed()
-
     def close_if_unusable_or_obsolete(self):
         logger.debug(f"close_if_unusable_or_obsolete method. close at: {self.close_at}")
         super().close_if_unusable_or_obsolete()
@@ -220,10 +217,6 @@ class DatabaseWrapper(BaseDatabaseWrapper):
     def temporary_connection(self):
         logger.debug("temporary_connection method")
         super().temporary_connection()
-
-    def _nodb_cursor(self):
-        logger.debug("_nodb_cursor method")
-        super()._nodb_cursor()
 
     def _close(self):
         """

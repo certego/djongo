@@ -169,12 +169,11 @@ class DatabaseWrapper(BaseDatabaseWrapper):
         # To prevent leaving unclosed connections behind,
         # client_conn must be closed before a new connection
         # is created.
-        if self.client_connection is not None:
-            self.client_connection.close()
-            logger.debug('Existing MongoClient connection closed')
-
-        self.client_connection = Database.connect(db=name, **connection_params)
-        logger.debug('New Database connection')
+        if self.client_connection:
+            logger.debug('Using already existing connection')
+        else:
+            self.client_connection = Database.connect(db=name, **connection_params)
+            logger.debug('New Database connection')
 
         database = self.client_connection[name]
         self.djongo_connection = DjongoClient(database, es)

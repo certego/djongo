@@ -9,6 +9,8 @@ import sys
 
 LONG_DESCRIPTION = """
 
+This is a Fork from Certego S.R.L.
+
 Use Mongodb as a backend database for your django project, without changing a
 single django model!
 
@@ -84,7 +86,7 @@ def find_version(*file_paths):
 
 install_requires = [
     'sqlparse==0.4.2',
-    'pymongo>=3.2.0,<4.0.0',
+    'pymongo>=3.2.0,<5.0.0',
     'django>=2.1',
 ]
 
@@ -92,13 +94,13 @@ if sys.version_info.major == 3 and sys.version_info.minor < 7:
     install_requires.append("dataclasses")
 
 setup(
-    name='djongo',
+    name='djongo-certego',
     version=find_version("djongo", "__init__.py"),
     include_package_data=True,
     packages=packages,
     url='https://www.djongomapper.com/',
     license='AGPL',
-    author='doableware',
+    author='Certego S.R.L.',
     author_email='support@doableware.com',
     description=(
         'Driver for allowing Django to use MongoDB as the database backend.'),

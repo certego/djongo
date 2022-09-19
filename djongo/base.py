@@ -213,7 +213,7 @@ class DatabaseWrapper(BaseDatabaseWrapper):
         super().close_if_health_check_failed()
 
     def close_if_unusable_or_obsolete(self):
-        logger.debug("close_if_unusable_or_obsolete method")
+        logger.debug(f"close_if_unusable_or_obsolete method. close at: {self.close_at}")
         super().close_if_unusable_or_obsolete()
 
     @contextmanager

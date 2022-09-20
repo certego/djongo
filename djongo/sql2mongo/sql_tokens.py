@@ -6,6 +6,9 @@ from sqlparse import tokens, parse as sqlparse
 from sqlparse.sql import Token, Identifier, Function, Comparison, Parenthesis, IdentifierList, Statement
 from . import query as query_module
 from ..exceptions import SQLDecodeError, NotSupportedError
+from logging import getLogger
+logger = getLogger(__name__)
+
 
 all_token_types = U['SQLConstIdentifier',
                     'djongo.sql2mongo.functions.CountFunc',
@@ -129,6 +132,7 @@ class SQLIdentifier(AliasableToken):
     def table(self) -> str:
         name = self.given_table
         alias2token = self.token_alias.alias2token
+        logger.debug(f"alias2token {alias2token}, type {type(alias2token)}")
         try:
             return alias2token[name].table
         except KeyError:

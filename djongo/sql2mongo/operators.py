@@ -448,7 +448,7 @@ class _StatementParser:
             logger.debug("match Punctuation")
             pass
 
-        elif isinstance(tok, Identifier)
+        elif isinstance(tok, Identifier):
             logger.debug("match Identifier")
             pass
         else:

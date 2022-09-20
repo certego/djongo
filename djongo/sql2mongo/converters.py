@@ -11,6 +11,8 @@ from .functions import SQLFunc, CountFuncAll
 from .operators import WhereOp
 from ..exceptions import SQLDecodeError
 from .sql_tokens import SQLToken, SQLStatement
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Converter:
@@ -117,6 +119,7 @@ class WhereConverter(Converter):
 
     def parse(self):
         tok = self.statement.current_token
+        logger.debug(f"calling WhereOp. token: {tok}, query: {self.query}, params {self.query.params}")
         self.op = WhereOp(
             statement=SQLStatement(tok),
             query=self.query,

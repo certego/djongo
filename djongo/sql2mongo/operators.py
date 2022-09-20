@@ -12,6 +12,9 @@ from ..exceptions import SQLDecodeError
 from .sql_tokens import SQLToken, SQLStatement
 from . import query
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 def re_index(value: str):
     match = list(re.finditer(r'%\(([0-9]+)\)s', value, flags=re.IGNORECASE))
@@ -388,6 +391,7 @@ class _StatementParser:
                   statement: SQLStatement) -> '_Op':
         op = None
         kw = {'statement': statement, 'query': self.query}
+        logger.debug(f"_token2op query {self.query}, token {tok}")
         if tok.match(tokens.Keyword, 'AND'):
             op = AndOp(**kw)
 

@@ -151,6 +151,7 @@ class NotInOp(_InNotInOp):
 class InOp(_InNotInOp):
 
     def __init__(self, *args, **kwargs):
+        logger.debug("match InOp")
         super().__init__(name='IN', *args, **kwargs)
         self._fill_in(self.statement.next())
 
@@ -165,6 +166,7 @@ class InOp(_InNotInOp):
 class LikeOp(_BinaryOp):
 
     def __init__(self, *args, **kwargs):
+        logger.debug("match LikeOp")
         super().__init__(name='LIKE', *args, **kwargs)
         self._regex = None
         self._make_regex(self.statement.next())

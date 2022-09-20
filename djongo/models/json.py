@@ -1,7 +1,7 @@
 import warnings
 
 try:
-    from jsoneditor.fields.django_jsonfield import JSONField as JSONFieldBase
+    from jsoneditor.fields.jsonfield import JSONField as JSONFieldBase
 except ImportError:
     from django.db import models
 

@@ -391,7 +391,7 @@ class _StatementParser:
                   statement: SQLStatement) -> '_Op':
         op = None
         kw = {'statement': statement, 'query': self.query}
-        logger.debug(f"_token2op query {self.query}, token {tok}")
+        logger.debug(f"_token2op query {self.query}, token {tok}, token instance {type(tok)}")
         if tok.match(tokens.Keyword, 'AND'):
             op = AndOp(**kw)
 

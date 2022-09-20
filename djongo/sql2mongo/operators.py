@@ -392,40 +392,41 @@ class _StatementParser:
         op = None
         kw = {'statement': statement, 'query': self.query}
         logger.debug(f"_token2op query {self.query}, token {tok}, token instance {type(tok)}")
-        if tok.match(tokens.Keyword, 'AND'):
+        if 'AND' in tok:
             logger.debug("match AND")
             op = AndOp(**kw)
 
-        elif tok.match(tokens.Keyword, 'OR'):
+        elif 'OR' in tok:
             logger.debug("match OR")
             op = OrOp(**kw)
 
-        elif tok.match(tokens.Keyword, 'IN'):
+        elif 'IN' in tok:
             logger.debug("match IN")
             op = InOp(**kw)
 
-        elif tok.match(tokens.Keyword, 'NOT'):
-            logger.debug("match NOT")
+        elif 'NOT' in tok:
             if statement.next_token.match(tokens.Keyword, 'IN'):
+                logger.debug("match NOT IN")
                 op = NotInOp(**kw)
                 statement.skip(1)
             else:
+                logger.debug("match NOT")
                 op = NotOp(**kw)
 
-        elif tok.match(tokens.Keyword, 'LIKE'):
+        elif 'LIKE' in tok:
             logger.debug("match LIKE")
             op = LikeOp(**kw)
 
-        elif tok.match(tokens.Keyword, 'iLIKE'):
+        elif 'iLIKE' in tok:
             logger.debug("match iLIKE")
             op = iLikeOp(**kw)
 
-        elif tok.match(tokens.Keyword, 'BETWEEN'):
+        elif 'BETWEEN' in tok:
             logger.debug("match BETWEEN")
             op = BetweenOp(**kw)
             statement.skip(3)
 
-        elif tok.match(tokens.Keyword, 'IS'):
+        elif 'IS' in tok:
             logger.debug("match IS")
             op = IsOp(**kw)
 
@@ -549,7 +550,9 @@ class CmpOp(_Op):
         if isinstance(self.statement.right, Identifier):
             raise SQLDecodeError('Join using WHERE not supported')
 
-        self._operator = OPERATOR_MAP[self.statement.token_next(0)[1].value]
+        token_next = self.statement.token_next(0)[1].value
+        logger.debug(f"accessing map for token {token_next}")
+        self._operator = OPERATOR_MAP[token_next]
         index = re_index(self.statement.right.value)
 
         if self._operator in NEW_OPERATORS:

@@ -454,6 +454,7 @@ class _StatementParser:
 
         prev_op = None
         op = None
+        logger.debug(f"_statement2ops statement {statement}, type {type(statement)}")
         for tok in statement:
             op = self._token2op(tok, statement)
             if not op:

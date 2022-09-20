@@ -123,7 +123,10 @@ class SelectQuery(DQLQuery):
     def parse(self):
         statement = SQLStatement(self.statement)
 
+        logger.debug(f"parsed statement {statement}")
+
         for tok in statement:
+            logger.debug(f"parsed statement. Tok: {statement}")
             if tok.match(tokens.DML, 'SELECT'):
                 self.selected_columns = ColumnSelectConverter(self, statement)
 
@@ -999,6 +1002,7 @@ class Query:
         return query
 
     def _select(self, sm):
+        logger.debug(f"select statement {sm}, type {type(sm)}")
         return SelectQuery(self.db, self.connection_properties, sm, self._params)
 
     FUNC_MAP = {

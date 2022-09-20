@@ -392,19 +392,20 @@ class _StatementParser:
         op = None
         kw = {'statement': statement, 'query': self.query}
         logger.debug(f"_token2op query {self.query}, token {tok}, token instance {type(tok)}")
-        if 'AND' in tok:
+        token_string = str(tok)
+        if 'AND' in token_string:
             logger.debug("match AND")
             op = AndOp(**kw)
 
-        elif 'OR' in tok:
+        elif 'OR' in token_string:
             logger.debug("match OR")
             op = OrOp(**kw)
 
-        elif 'IN' in tok:
+        elif 'IN' in token_string:
             logger.debug("match IN")
             op = InOp(**kw)
 
-        elif 'NOT' in tok:
+        elif 'NOT' in token_string:
             if statement.next_token.match(tokens.Keyword, 'IN'):
                 logger.debug("match NOT IN")
                 op = NotInOp(**kw)
@@ -413,20 +414,20 @@ class _StatementParser:
                 logger.debug("match NOT")
                 op = NotOp(**kw)
 
-        elif 'LIKE' in tok:
+        elif 'LIKE' in token_string:
             logger.debug("match LIKE")
             op = LikeOp(**kw)
 
-        elif 'iLIKE' in tok:
+        elif 'iLIKE' in token_string:
             logger.debug("match iLIKE")
             op = iLikeOp(**kw)
 
-        elif 'BETWEEN' in tok:
+        elif 'BETWEEN' in token_string:
             logger.debug("match BETWEEN")
             op = BetweenOp(**kw)
             statement.skip(3)
 
-        elif 'IS' in tok:
+        elif 'IS' in token_string:
             logger.debug("match IS")
             op = IsOp(**kw)
 

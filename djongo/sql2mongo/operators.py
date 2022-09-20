@@ -392,42 +392,40 @@ class _StatementParser:
         op = None
         kw = {'statement': statement, 'query': self.query}
         logger.debug(f"_token2op query {self.query}, token {tok}, token instance {type(tok)}")
-        token_string = str(tok)
-        if 'AND' in token_string:
+        if tok.match(tokens.Keyword, 'AND'):
             logger.debug("match AND")
             op = AndOp(**kw)
 
-        elif 'OR' in token_string:
+        elif tok.match(tokens.Keyword, 'OR'):
             logger.debug("match OR")
             op = OrOp(**kw)
 
-        elif 'IN' in token_string:
+        elif tok.match(tokens.Keyword, 'IN'):
             logger.debug("match IN")
             op = InOp(**kw)
 
-        elif 'NOT' in token_string:
+        elif tok.match(tokens.Keyword, 'NOT'):
+            logger.debug("match NOT")
             if statement.next_token.match(tokens.Keyword, 'IN'):
-                logger.debug("match NOT IN")
                 op = NotInOp(**kw)
                 statement.skip(1)
             else:
-                logger.debug("match NOT")
                 op = NotOp(**kw)
 
-        elif 'LIKE' in token_string:
+        elif tok.match(tokens.Keyword, 'LIKE'):
             logger.debug("match LIKE")
             op = LikeOp(**kw)
 
-        elif 'iLIKE' in token_string:
+        elif tok.match(tokens.Keyword, 'iLIKE'):
             logger.debug("match iLIKE")
             op = iLikeOp(**kw)
 
-        elif 'BETWEEN' in token_string:
+        elif tok.match(tokens.Keyword, 'BETWEEN'):
             logger.debug("match BETWEEN")
             op = BetweenOp(**kw)
             statement.skip(3)
 
-        elif 'IS' in token_string:
+        elif tok.match(tokens.Keyword, 'IS'):
             logger.debug("match IS")
             op = IsOp(**kw)
 
@@ -554,13 +552,17 @@ class CmpOp(_Op):
         token_next = self.statement.token_next(0)[1].value
         logger.debug(f"accessing map for token {token_next}")
         self._operator = OPERATOR_MAP[token_next]
+        logger.debug(f"self.statement.right.value: {self.statement.right.value}")
         index = re_index(self.statement.right.value)
+        logger.debug(f"index: {self.index}")
 
         if self._operator in NEW_OPERATORS:
             index = index if isinstance(index, list) else [index]
             self._constant = [self.params[i] for i in index]
         else:
             self._constant = self.params[index] if index is not None else MAP_INDEX_NONE[self.statement.right.value]
+
+        logger.debug(f"constant: {self._constant}")
 
         if isinstance(self._constant, dict):
             self._field_ext, self._constant = next(iter(self._constant.items()))
@@ -596,6 +598,7 @@ OPERATOR_MAP = {
 OPERATOR_PRECEDENCE = {
     'IS': 8,
     'BETWEEN': 7,
+    'iLIKE': 6,
     'LIKE': 6,
     'IN': 5,
     'NOT IN': 4,

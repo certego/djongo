@@ -151,7 +151,6 @@ class NotInOp(_InNotInOp):
 class InOp(_InNotInOp):
 
     def __init__(self, *args, **kwargs):
-        logger.debug("match InOp")
         super().__init__(name='IN', *args, **kwargs)
         self._fill_in(self.statement.next())
 
@@ -166,7 +165,6 @@ class InOp(_InNotInOp):
 class LikeOp(_BinaryOp):
 
     def __init__(self, *args, **kwargs):
-        logger.debug("match LikeOp")
         super().__init__(name='LIKE', *args, **kwargs)
         self._regex = None
         self._make_regex(self.statement.next())
@@ -395,15 +393,19 @@ class _StatementParser:
         kw = {'statement': statement, 'query': self.query}
         logger.debug(f"_token2op query {self.query}, token {tok}, token instance {type(tok)}")
         if tok.match(tokens.Keyword, 'AND'):
+            logger.debug("match AND")
             op = AndOp(**kw)
 
         elif tok.match(tokens.Keyword, 'OR'):
+            logger.debug("match OR")
             op = OrOp(**kw)
 
         elif tok.match(tokens.Keyword, 'IN'):
+            logger.debug("match IN")
             op = InOp(**kw)
 
         elif tok.match(tokens.Keyword, 'NOT'):
+            logger.debug("match NOT")
             if statement.next_token.match(tokens.Keyword, 'IN'):
                 op = NotInOp(**kw)
                 statement.skip(1)
@@ -411,22 +413,28 @@ class _StatementParser:
                 op = NotOp(**kw)
 
         elif tok.match(tokens.Keyword, 'LIKE'):
+            logger.debug("match LIKE")
             op = LikeOp(**kw)
 
         elif tok.match(tokens.Keyword, 'iLIKE'):
+            logger.debug("match iLIKE")
             op = iLikeOp(**kw)
 
         elif tok.match(tokens.Keyword, 'BETWEEN'):
+            logger.debug("match BETWEEN")
             op = BetweenOp(**kw)
             statement.skip(3)
 
         elif tok.match(tokens.Keyword, 'IS'):
+            logger.debug("match IS")
             op = IsOp(**kw)
 
         elif isinstance(tok, Comparison):
+            logger.debug("match Comparison")
             op = CmpOp(tok, self.query)
 
         elif isinstance(tok, Parenthesis):
+            logger.debug("match Parenthesis")
             if (tok[1].match(tokens.Name.Placeholder, '.*', regex=True)
                     or tok[1].match(tokens.Keyword, 'Null')
                     or isinstance(tok[1], IdentifierList)
@@ -437,9 +445,11 @@ class _StatementParser:
                 op = ParenthesisOp(SQLStatement(tok), self.query)
 
         elif tok.match(tokens.Punctuation, (')', '(')):
+            logger.debug("match Punctuation")
             pass
 
-        elif isinstance(tok, Identifier):
+        elif isinstance(tok, Identifier)
+            logger.debug("match Identifier")
             pass
         else:
             raise SQLDecodeError

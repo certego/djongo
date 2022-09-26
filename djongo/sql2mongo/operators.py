@@ -574,11 +574,13 @@ OPERATOR_MAP = {
     '>=': '$gte',
     '<=': '$lte',
     'IN': '$in',
-    'NOT IN': '$nin'
+    'NOT IN': '$nin',
+    'iLIKE': '$eq'
 }
 OPERATOR_PRECEDENCE = {
-    'IS': 8,
-    'BETWEEN': 7,
+    'IS': 9,
+    'BETWEEN': 8,
+    'iLIKE': 7,
     'LIKE': 6,
     'IN': 5,
     'NOT IN': 4,

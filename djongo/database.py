@@ -7,11 +7,17 @@ clients = {}
 
 def connect(db, **kwargs):
     try:
-        return clients[db]
+        conn = clients[db]
     except KeyError:
         logger.debug('New MongoClient connection')
-        clients[db] = MongoClient(**kwargs, connect=False)
-    return clients[db]
+        conn = MongoClient(**kwargs, connect=False)
+    else:
+        if conn is None:
+            logger.warning("Client[db] was None. Recreating it")
+            conn = MongoClient(**kwargs, connect=False)
+            clients[db] = conn
+
+    return conn
 
 
 class Error(Exception):  # NOQA: StandardError undefined on PY3

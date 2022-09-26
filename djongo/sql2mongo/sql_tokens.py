@@ -132,11 +132,20 @@ class SQLIdentifier(AliasableToken):
     def table(self) -> str:
         name = self.given_table
         alias2token = self.token_alias.alias2token
-        logger.debug(f"alias2token {alias2token}, type {type(alias2token)}")
+        logger.debug(f"alias2token {alias2token}, type {type(alias2token)}, name {name}")
         try:
-            return alias2token[name].table
+
+            alias = alias2token[name]
         except KeyError:
             return name
+        else:
+            logger.debug(f"Retrieved alias {alias} type {type(alias)}")
+            if alias is self:
+                logger.debug(f"Alias is self!")
+                return name
+            else:
+                logger.debug(f"Alias is notself!")
+                return alias.table
 
     @property
     def given_table(self) -> str:

@@ -168,7 +168,8 @@ class SelectQuery(DQLQuery):
         if not cursor.alive:
             return
 
-        for doc in cursor:
+        for index, doc in enumerate(cursor):
+            logger.debug(f"cursor rotation: index {index}")
             yield self._align_results(doc)
         return
 
@@ -270,6 +271,7 @@ class SelectQuery(DQLQuery):
             sql_tokens = self.selected_columns.sql_tokens
 
         for selected in sql_tokens:
+            logger.debug(f"selected sqltoken: {selected} type: {type(selected)}")
             if isinstance(selected, SQLIdentifier):
                 if selected.table == self.left_table:
                     try:

@@ -135,8 +135,9 @@ class SQLIdentifier(AliasableToken):
         logger.debug(f"alias2token {alias2token}, type {type(alias2token)}, name {name}")
         try:
             sqli = alias2token[name]
+            logger.debug(f"sqli {sqli} type {type(sqli)}")
             table = sqli.table
-            logger.debug(f"sqli {sqli} type {type(sqli)}, table {table}, type {type(table)}")
+            logger.debug(f"table {table}, type {type(table)}")
             return table
         except KeyError:
             return name

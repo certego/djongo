@@ -101,7 +101,7 @@ setup(
     url='https://www.djongomapper.com/',
     license='AGPL',
     author='Certego S.R.L.',
-    author_email='support@doableware.com',
+    author_email='cti@certego.net',
     description=(
         'Driver for allowing Django to use MongoDB as the database backend.'),
     install_requires=install_requires,

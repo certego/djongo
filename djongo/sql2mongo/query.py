@@ -237,6 +237,8 @@ class SelectQuery(DQLQuery):
         return not(self.distinct or self.groupby) and self.selected_columns
 
     def _get_cursor(self):
+        if self.db is None:
+            logger.error("YOUR DB CONNECTION IS CLOSED. Please add health_checks + no expire")
         if self._needs_aggregation():
             pipeline = self._make_pipeline()
             cur = self.db[self.left_table].aggregate(pipeline)

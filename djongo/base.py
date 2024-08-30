@@ -209,7 +209,7 @@ class DatabaseWrapper(BaseDatabaseWrapper):
         """
         Returns an active connection cursor to the database.
         """
-        if not self.connection:
+        if self.connection is None:
             self.connection = self.get_new_connection(self.get_connection_params())
         return Cursor(self.client_connection, self.connection, self.djongo_connection)
 
